@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>Import Textures From GBG v1.1</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+	</head>
+
+	<style>
+		* { font-family: "Varela Round", sans-serif; }
+		.color { border:2px solid black;"}
+	</style>
+
+	<body>
+		<div style="display: block; background-color: #B0B0B0; padding: 8px; border-radius: 16px; padding: 1px 20px;">
+			<h2>Import Textures From GBG v1.1</h2>
+			<p><input id="file" type="file" accept="image/*" name="image"></p>
+			<div id="display" style="display: none;">
+				<p><img id="image" style="border:2px solid black; width: 35%;"/><p>
+				<button id="get_texture">Get Texture!</button>
+				<div id="done">
+					<p><canvas id="canvas" style="border:2px solid black;"></canvas></p>
+					<p><button id="download">Download</button></p>
+				</div>
+			</div>
+		</div>
+
+		<script>
+
+			window.onload = function () {
+
+				var filename = "";
+
+				const colors = [
+					"ffffffff", "edededff", "d9d9d9ff", "f3e6ffff", "dcb3ffff", "c685ffff", "e6fbffff", "ccf7ffff", "85ebffff", "f7ffe6ff", "e6ffb3ff", "d6ff85ff", "ffe6e6ff", "ffb3b3ff", "ff8585ff",
+					"b5b5b5ff", "909090ff", "6c6c6cff", "8800ffff", "520099ff", "29004dff", "00d5ffff", "00aaccff", "006b80ff", "aaff00ff", "90d900ff", "558000ff", "ff0000ff", "cc0012ff", "800000ff",
+					"484848ff", "303030ff", "000000ff", "bb98d9ff", "846d99ff", "5b5266ff", "98ced9ff", "5a7a80ff", "36484dff", "c4d998ff", "89996cff", "3d4d1fff", "d95757ff", "804040ff", "4d1f1fff",
+					"--------", "--------", "00000000", "fee6ffff", "fbb3ffff", "f985ffff", "e6f2ffff", "b3d6ffff", "85beffff", "ccffd3ff", "99ffaaff", "66ff7eff", "fff0e6ff", "ffd3b3ff", "ffb885ff",
+					"--------", "--------", "--------", "f200ffff", "c200ccff", "7a0080ff", "1080ffff", "005fccff", "003c80ff", "00D924ff", "009919ff", "00590eff", "ff6a00ff", "cc5500ff", "803500ff",
+					"--------", "--------", "--------", "d698d9ff", "7d4080ff", "4b1f4dff", "98b6d9ff", "405e80ff", "1f344dff", "86bf90ff", "598060ff", "1f3323ff", "d9b398ff", "805b40ff", "4d321fff",
+					"--------", "--------", "--------", "ffe6f5ff", "ffb3dfff", "ff85ccff", "e8e6ffff", "d0ccffff", "a199ffff", "e6fffaff", "b3fff0ff", "85ffe7ff", "fffde6ff", "fffab3ff", "fff785ff",
+					"--------", "--------", "--------", "ff0095ff", "cc0077ff", "80004bff", "1500ffff", "0f00b3ff", "07004dff", "00ffcfff", "00cca3ff", "008066ff", "ffee00ff", "ccbe00ff", "807700ff",
+					"--------", "--------", "--------", "d998beff", "80536dff", "4d1f3aff", "b2aed9ff", "656282ff", "3b3a4dff", "98d9ccff", "6b9990ff", "1f4d43ff", "bfbb86ff", "807e5aff", "4d4b32ff"
+				];
+
+				const usedColors = [];
+				for (i = 0; i < colors.length; i++) {
+					if (colors[i][0] != "-" && colors[i] != "00000000") {
+						usedColors.push(hexToRgb(colors[i]));
+					}
+				}
+
+				document.getElementById("file").addEventListener("change", function() {
+
+					filename = event.target.files[0].name;
+					var extention = filename.substr(filename.indexOf(".") - filename.length + 1).toLowerCase();
+					filename = filename.substr(0, filename.indexOf("."));
+
+					document.getElementById("display").style.display = "block";
+					document.getElementById("image").src = URL.createObjectURL(event.target.files[0]);
+					document.getElementById("done").style.display = "none";
+
+				});
+
+				document.getElementById("get_texture").addEventListener("click", function() {
+
+					var display = document.getElementById("image");
+					var canvas = document.getElementById("canvas");
+					var context = canvas.getContext("2d");
+					canvas.width = 512;
+					canvas.height = 512;
+					context.drawImage(display, -336, -154, 1280, 720);
+					var image = context.getImageData(0, 0, canvas.width, canvas.height);
+					var save_colors = [];
+					for (var y = 0; y < 64; y++) {
+						for (var x = 0; x < 64; x++) {
+							var avgR1 = 0, avgG1 = 0, avgB1 = 0;
+							var avgR2 = 0, avgG2 = 0, avgB2 = 0;
+							for (u = 0; u < 2; u++) {
+								for (v = 0; v < 2; v++) {
+									var pixel11 = x * 8 + u + 1 + (y * 8 + v + 1) * 512;
+									var pixel21 = pixel11 + 4;
+									var pixel12 = pixel11 + 4 * 512;
+									var pixel22 = pixel12 + 4;
+									avgR1 += (image.data[pixel11 * 4 + 0] + image.data[pixel22 * 4 + 0]) / 8;
+									avgG1 += (image.data[pixel11 * 4 + 1] + image.data[pixel22 * 4 + 1]) / 8;
+									avgB1 += (image.data[pixel11 * 4 + 2] + image.data[pixel22 * 4 + 2]) / 8;
+									avgR2 += (image.data[pixel12 * 4 + 0] + image.data[pixel21 * 4 + 0]) / 8;
+									avgG2 += (image.data[pixel12 * 4 + 1] + image.data[pixel21 * 4 + 1]) / 8;
+									avgB2 += (image.data[pixel12 * 4 + 2] + image.data[pixel21 * 4 + 2]) / 8;
+								}
+							}
+							var distR1 = avgR1 - avgR2;
+							var distG1 = avgG1 - avgG2;
+							var distB1 = avgB1 - avgB2;
+							var dist1 = Math.sqrt(distR1 * distR1 + distG1 * distG1 + distB1 * distB1);
+							if (dist1 > 8) {
+								save_colors.push(-1);
+							} else {
+								var avgR = (avgR1 + avgR2) / 2;
+								var avgG = (avgG1 + avgG2) / 2;
+								var avgB = (avgB1 + avgB2) / 2;
+								var nearColor = 0, minDist = 0;
+								for (var c = 0; c < usedColors.length; c++) {
+									var distR2 = avgR - usedColors[c].r;
+									var distG2 = avgG - usedColors[c].g;
+									var distB2 = avgB - usedColors[c].b;
+									var dist2 = Math.sqrt(distR2 * distR2 + distG2 * distG2 + distB2 * distB2);
+									if (c == 0 || dist2 < minDist) {
+										minDist = dist2;
+										nearColor = c;
+									}
+								}
+								save_colors.push(nearColor);
+							}
+						}
+					}
+					canvas.width = 64;
+					canvas.height = 64;
+					var image2 = context.getImageData(0, 0, canvas.width, canvas.height);
+					for (var i = 0; i < 4096; i++) {
+						if (save_colors[i] >= 0) {
+							image2.data[i * 4 + 0] = usedColors[save_colors[i]].r;
+							image2.data[i * 4 + 1] = usedColors[save_colors[i]].g;
+							image2.data[i * 4 + 2] = usedColors[save_colors[i]].b;
+							image2.data[i * 4 + 3] = usedColors[save_colors[i]].a;
+						}
+					}
+					context.putImageData(image2, 0, 0);
+					document.getElementById("done").style.display = "block";
+
+				});
+
+				document.getElementById("download").addEventListener("click", function() {
+					download(canvas.toDataURL(), filename);
+				});
+
+				function download(source, filename) {
+					var link = document.createElement("a");
+					link.setAttribute("href", source);
+					link.setAttribute("download", filename);
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+				}
+
+				function hexToRgb(hex) {
+				  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+				  return result ? {
+					r: parseInt(result[1], 16),
+					g: parseInt(result[2], 16),
+					b: parseInt(result[3], 16),
+					a: parseInt(result[4], 16)
+				  } : null;
+				}
+
+			}
+
+		</script>
+	</body>
+
+</html>

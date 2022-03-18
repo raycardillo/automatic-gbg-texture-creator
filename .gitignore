@@ -34,3 +34,8 @@
 # Misc
 .DS_Store
 *.log
+*.swp
+
+# gh-pages branch leftovers
+_site
+Gemfile.lock

@@ -20,7 +20,7 @@ _For your first run, you can skip this step and use the default example texture.
   1. Use the `GBG_Texture_Builder` utility to convert your image to a CSV representing the texture pixel data.
   1. Copy the CSV numbers into the image data array (`images[][IMAGE_DATA_LEN]`) in the program. If you're on a Mac the `pbcopy` utility is a quick way to copy the CSV data into your pasteboard (e.g., `pbcopy < file.csv` and then `⌘ Command + V` to paste).
   1. Delete any example image data that you don't want.
-  1. I've created more than 10 images in one session so it's just limited to the amount of `PROGMEM` that is available on your board (and how long you want to wait).
+  1. I've created over 28 images in one session without any problems. It's just limited by the amount of `PROGMEM` that is available on your board (and how long you want to wait).
 
 ## Upload Program to Board
   1. Plugin the device to the computer.

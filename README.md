@@ -42,7 +42,7 @@ The extracted data is simply a series of 8-bit (`uint8_t`) values representing c
 The mouse controller program is uploaded to a microprocessor board which is then connected to a Nintendo Switch to simulate mouse movements over the USB port. The program goes through the pixel data and sends mouse movements and clicks to automatically create Texture Nodons. Not only is this faster than manually creating them, but it's more accurate and less frustrating as well.
 
 #### Seeeduino XIAO / TinyUSB
-Follow the instructions in the **[agbgtc_tinyusb](./agbgtc_tinyusb)** directory (or watch the YouTube video from the GitHub page link above). In theory, it should work on any TinyUSB device but in practice it currently depends on the `Adafruit_TinyUSB` library (version `0.10.5`). I also had to create a special mouse utility helper specifically for this project. I've currently only tested it on the Seeeduino XIAO board.
+Visit [the landing page](https://raycardillo.github.io/automatic-gbg-texture-creator/) and watch [the YouTube video](https://youtu.be/DPoPXSTAJMc) for a quick overview and demonstration. Follow the instructions in the **[agbgtc_tinyusb](./agbgtc_tinyusb)** directory. In theory, it should work on any TinyUSB device but in practice it currently depends on the `Adafruit_TinyUSB` library (version `0.10.5`). I also had to create a special mouse utility helper specifically for this project. I've currently only tested it on the Seeeduino XIAO board.
 
 <figure>
   <img alt="Seeeduino XIAO" src="./images/Seeeduino-XIAO.jpg" style="width:400px;height:300px;">

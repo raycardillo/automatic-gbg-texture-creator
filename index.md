@@ -24,7 +24,7 @@ started creating your own custom Texture Nodons with a **Seeeduino XIAO**
 (or other TinyUSB) board.
 
 
-**YouTube video coming that demonstrates everything you need to know.**
+**[LongToothGamer also made a YouTube video](https://youtu.be/DPoPXSTAJMc) that demonstrates the process.**
 
 
 # Overview
